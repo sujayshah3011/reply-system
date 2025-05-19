@@ -2,10 +2,10 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Literal
 import google.generativeai as genai
-import sqlite3
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+from database import init_db, save_reply as db_save_reply
 
 load_dotenv()
 app = FastAPI(title="Social Media Reply Generator")
@@ -44,22 +44,7 @@ class PostResponse(BaseModel):
     generated_reply: str
     timestamp: str
 
-# Database Setup
-def init_db():
-    conn = sqlite3.connect("replies.db")
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS replies (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            platform TEXT,
-            post_text TEXT,
-            generated_reply TEXT,
-            timestamp TEXT
-        )
-    """)
-    conn.commit()
-    conn.close()
-
+# Initialize database
 init_db()
 
 # Generate Reply
@@ -69,19 +54,6 @@ async def generate_reply(platform: str, post_text: str) -> str:
     response = model.generate_content(prompt)
     return response.text.strip()
 
-# Save to Database
-def save_reply(platform: str, post_text: str, generated_reply: str):
-    conn = sqlite3.connect("replies.db")
-    c = conn.cursor()
-    timestamp = datetime.utcnow().isoformat()
-    c.execute(
-        "INSERT INTO replies (platform, post_text, generated_reply, timestamp) VALUES (?, ?, ?, ?)",
-        (platform, post_text, generated_reply, timestamp)
-    )
-    conn.commit()
-    conn.close()
-    return timestamp
-
 # API Endpoint
 @app.post("/reply", response_model=PostResponse)
 async def create_reply(post: PostRequest):
@@ -89,8 +61,11 @@ async def create_reply(post: PostRequest):
         # Generate reply
         generated_reply = await generate_reply(post.platform, post.post_text)
         
+        # Create timestamp
+        timestamp = datetime.utcnow().isoformat()
+        
         # Save to database
-        timestamp = save_reply(post.platform, post.post_text, generated_reply)
+        db_save_reply(post.platform, post.post_text, generated_reply, timestamp)
         
         # Return response
         return PostResponse(
