@@ -11,6 +11,9 @@ A FastAPI and Streamlit application that generates authentic, human-like replies
 - Batch processing of posts from CSV files
 - Web interface for viewing stored replies
 
+<img width="1437" alt="Screenshot 2025-05-20 at 1 10 53 PM" src="https://github.com/user-attachments/assets/0e18fe76-3151-4fea-9b9f-4a0e4cdbe740" />
+
+
 ## Project Structure
 
 | File                 | Description                                                                 |
@@ -29,7 +32,7 @@ A FastAPI and Streamlit application that generates authentic, human-like replies
 1. Clone the repository:
 
    ```
-   git clone <your-repository-url>
+   git clone https://github.com/sujayshah3011/reply-system
    cd Social-Media-Replier
    ```
 
