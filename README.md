@@ -12,6 +12,7 @@ A FastAPI and Streamlit application that generates authentic, human-like replies
 - Web interface for viewing stored replies
 
 <img width="1437" alt="Screenshot 2025-05-20 at 1 10 53 PM" src="https://github.com/user-attachments/assets/0e18fe76-3151-4fea-9b9f-4a0e4cdbe740" />
+<img width="1431" alt="Screenshot 2025-05-20 at 1 22 19 PM" src="https://github.com/user-attachments/assets/65708088-3f83-480d-902d-f919f622e7ac" />
 
 
 ## Project Structure
